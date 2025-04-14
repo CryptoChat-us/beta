@@ -10,6 +10,7 @@ import feign.FeignException;
 import io.github.resilience4j.retry.annotation.Retry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import br.com.api.crypto_chat.exception.CryptoApiException;
 
 @Service
 @Slf4j

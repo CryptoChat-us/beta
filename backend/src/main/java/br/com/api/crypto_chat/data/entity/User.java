@@ -76,6 +76,9 @@ public class User {
     @Column(nullable = false)
     private boolean isActive;
 
+    @Column
+    private LocalDateTime lastLoginDate;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private LanguageLevel languageLevel;

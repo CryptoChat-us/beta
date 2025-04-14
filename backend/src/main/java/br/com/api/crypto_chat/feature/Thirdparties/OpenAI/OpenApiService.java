@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.api.crypto_chat.vo.ChatRequestVO;
-import br.com.api.crypto_chat.vo.SpeechRequestVO;
+import br.com.api.crypto_chat.feature.Thirdparties.OpenAI.vo.SpeechRequestVO;
 import feign.FeignException;
 import io.github.resilience4j.retry.annotation.Retry;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +21,11 @@ public class OpenApiService {
 
     private final OpenApiClient openAIClient;
     private final ObjectMapper objectMapper;
+
+    @Retry(name = "openAIRetry")
+    public JsonNode callOpenAI(ChatRequestVO request) {
+        return generateChatCompletion(request);
+    }
 
     @Retry(name = "openAIRetry")
     public JsonNode generateChatCompletion(ChatRequestVO request) {

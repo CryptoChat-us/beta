@@ -41,4 +41,11 @@ public interface UserRepository extends JpaRepository<User, UUID> {
      * @return true if a user exists with either the login or email
      */
     boolean existsByLoginOrEmail(String login, String email);
+
+    /**
+     * Check if a user exists with the given login
+     * @param login The login to check
+     * @return true if a user exists with the login
+     */
+    boolean existsByLogin(String login);
 }

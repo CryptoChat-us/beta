@@ -21,7 +21,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import com.fasterxml.jackson.databind.JsonNode;
 
 
 @RestController
@@ -98,10 +97,7 @@ public class AuthController {
             return message;
         }
         try {
-            return translationService.translateText(message, language.name())
-                    .get("responseData")
-                    .get("translatedText")
-                    .asText();
+            return translationService.translateText(message, language.name());
         } catch (Exception e) {
             log.error("Translation failed for language: {}", language, e);
             return message; // Fallback to English

@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'Sequel_Sans';
+  src: url('/src/assets/fonts/Sequel_Sans.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* Custom scrollbar styles */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: theme('colors.secondary.100');
+}
+
+::-webkit-scrollbar-thumb {
+  background: theme('colors.secondary.300');
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: theme('colors.secondary.400');
+}

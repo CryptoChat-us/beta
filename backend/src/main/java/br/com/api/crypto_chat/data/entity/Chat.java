@@ -27,7 +27,7 @@ public class Chat {
     private UUID idChat;
 
     @Column(nullable = false)
-    private Boolean hasPrompt;
+    private Boolean flgHasPrompt;
 
     @Column(unique = true, nullable = false)
     private String login;

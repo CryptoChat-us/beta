@@ -6,7 +6,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import br.com.api.crypto_chat.feature.Thirdparties.CryptoApi.CoinGecko.CryptoApiException;
+import br.com.api.crypto_chat.exception.CryptoApiException;
 import feign.FeignException;
 import io.github.resilience4j.retry.annotation.Retry;
 import lombok.RequiredArgsConstructor;

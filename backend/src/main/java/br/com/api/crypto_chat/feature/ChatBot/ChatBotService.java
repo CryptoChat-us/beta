@@ -16,9 +16,9 @@ import br.com.api.crypto_chat.data.repository.LogMessageRepository;
 import br.com.api.crypto_chat.data.repository.PromptRepository;
 import br.com.api.crypto_chat.dto.ChatMessageRequest;
 import br.com.api.crypto_chat.dto.ChatMessageResponse;
-import br.com.api.crypto_chat.dto.ChatRequest;
-import br.com.api.crypto_chat.dto.ChatRequest.Message;
 import br.com.api.crypto_chat.feature.Thirdparties.OpenAI.OpenApiService;
+import br.com.api.crypto_chat.vo.ChatRequestVO;
+import br.com.api.crypto_chat.vo.MessageVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -50,8 +50,8 @@ public class ChatBotService {
     }
 
     private String processChat(ChatMessageRequest request) {
-        ChatRequest chatRequest = new ChatRequest();
-        List<Message> messages = new ArrayList<>();
+        // Prepare and send request
+        List<MessageVO> messages = new ArrayList<>();
 
         // Get chat history or initialize with prompts
         Optional<Chat> chat = chatRepository.findByLogin(request.getLogin());
@@ -71,10 +71,13 @@ public class ChatBotService {
         messages.add(createMessage("user", request.getMessage()));
 
         // Prepare and send request
-        chatRequest.setModel(GPT_MODEL);
-        chatRequest.setMessages(messages);
+        ChatRequestVO chatRequestVO = ChatRequestVO.builder()
+            .model(GPT_MODEL)
+            .messages(messages)
+            .temperature(0.7)
+            .build();
 
-        return openApiService.callOpenAI(chatRequest)
+        return openApiService.generateChatCompletion(chatRequestVO)
                 .get("choices").get(0).get("message").get("content").asText()
                 .replaceAll("```|´´´", "")
                 .replace("html", "");
@@ -88,11 +91,10 @@ public class ChatBotService {
         log.setDateMessage(LocalDateTime.now());
         
         logMessageRepository.save(log);
-        log.info("Recorded chat message for user: {}", login);
     }
 
-    private List<Message> loadPrimaryPrompts(String login) {
-        List<Message> messages = new ArrayList<>();
+    private List<MessageVO> loadPrimaryPrompts(String login) {
+        List<MessageVO> messages = new ArrayList<>();
         
         promptRepository.findAll().forEach(prompt -> {
             String decodedMessage = decodeBase64(prompt.getMessage());
@@ -121,11 +123,11 @@ public class ChatBotService {
         log.info("Initialized chat for user: {}", login);
     }
     
-    private Message createMessage(String role, String content) {
-        Message message = new Message();
-        message.setRole(role);
-        message.setContent(content);
-        return message;
+    private MessageVO createMessage(String role, String content) {
+        return MessageVO.builder()
+            .role(role)
+            .content(content)
+            .build();
     }
     
     private String decodeBase64(String encoded) {

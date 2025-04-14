@@ -19,7 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.api.crypto_chat.data.entity.Prompts;
 import br.com.api.crypto_chat.data.repository.PromptRepository;
-import br.com.api.crypto_chat.vo.PromptsVO;
+import br.com.api.crypto_chat.data.entity.Prompts;
 
 @Component
 public class InitializeDatabase {
@@ -42,13 +42,14 @@ public class InitializeDatabase {
                 String promptsContent = getPrompts();
                 if (promptsContent != null) {
                     JsonNode jsonValues = objectMapper.readTree(promptsContent);
-                    List<PromptsVO> listPrompts = formatToMessageVO(jsonValues);
+                    List<Prompts> listPrompts = formatToPrompts(jsonValues);
                     insertPrompts(listPrompts);
                     logger.info("Successfully initialized prompts database");
                 }
             }
         } catch (Exception e) {
             logger.error("Error initializing prompts database", e);
+        }
     }
 
     private String getPrompts() {
@@ -62,25 +63,20 @@ public class InitializeDatabase {
         }
     }
 
-    private List<PromptsVO> formatToMessageVO(JsonNode jsonValues) {
-        List<PromptsVO> list = new ArrayList<>();
+    private List<Prompts> formatToPrompts(JsonNode jsonValues) {
+        List<Prompts> list = new ArrayList<>();
         for (JsonNode node : jsonValues.get("prompts")) {
-            PromptsVO vo = new PromptsVO(
-                node.get("user").asText(),
-                node.get("assistant").asText(),
-                LocalDateTime.now()
-            );
-            list.add(vo);
+            Prompts prompt = new Prompts();
+            prompt.setMessage(node.get("user").asText());
+            prompt.setMessageResponse(node.get("assistant").asText());
+            prompt.setDateMessage(LocalDateTime.now());
+            list.add(prompt);
         }
         return list;
     }
 
-    private void insertPrompts(List<PromptsVO> listPrompts) {
-        for (PromptsVO vo : listPrompts) {
-            Prompts prompt = new Prompts();
-            prompt.setMessage(vo.getMessage());
-            prompt.setMessageResponse(vo.getMessageResponse());
-            prompt.setDateMessage(LocalDateTime.now());
+    private void insertPrompts(List<Prompts> listPrompts) {
+        for (Prompts prompt : listPrompts) {
             promptRepository.save(prompt);
         }
     }

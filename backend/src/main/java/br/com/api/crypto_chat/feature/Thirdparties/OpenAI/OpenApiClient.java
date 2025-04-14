@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import br.com.api.crypto_chat.vo.ChatRequestVO;
+import br.com.api.crypto_chat.feature.Thirdparties.OpenAI.vo.SpeechRequestVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
